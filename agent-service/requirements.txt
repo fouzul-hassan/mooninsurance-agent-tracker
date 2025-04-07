@@ -1,2 +1,4 @@
-flask
-gunicorn
+Flask==2.3.2
+flask_sqlalchemy==3.0.5
+pymysql==1.1.0
+gunicorn==23.0.0

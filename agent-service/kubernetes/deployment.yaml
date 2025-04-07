@@ -14,7 +14,11 @@ spec:
     spec:
       containers:
       - name: agent-service
-        image: fouzulhassan/agent-service:latest
+        image: registry.digitalocean.com/moonregistry/agent-service:latest
         ports:
         - containerPort: 80
-        imagePullPolicy: Always
+        env:
+        - name: DATABASE_URL
+          value: "mysql+pymysql://admin:root0811@mooninsurance-mysql.cn4e2eau6isn.ap-south-1.rds.amazonaws.com:3306/mooninsurance"
+        imagePullSecrets:
+        - name: do-secret
