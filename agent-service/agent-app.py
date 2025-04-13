@@ -4,10 +4,10 @@ import mysql.connector
 app = Flask(__name__)
 
 # Database connection configuration
-MYSQL_HOST = "localhost"
-MYSQL_USER = "root"
+MYSQL_HOST = "mooninsurance.ctuswk86cwot.eu-north-1.rds.amazonaws.com"
+MYSQL_USER = "admin"
 MYSQL_PWD = "root0811"
-MYSQL_DB = "moon_insurance"
+MYSQL_DB = "mooninsurance"
 PORT = "3306"
 
 # Route for the front-end page

@@ -1,5 +1,5 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS moon_insurance;
+CREATE DATABASE IF NOT EXISTS mooninsurance;
 USE moon_insurance;
 
 -- Drop tables if they exist (clean start)
