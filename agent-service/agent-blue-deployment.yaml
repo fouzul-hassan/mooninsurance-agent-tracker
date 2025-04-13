@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: agent-service
-        image: registry.digitalocean.com/moonregistry/agent-service:blue
+        image: registry.digitalocean.com/moonregistry/agent-service:blue-v2
         ports:
         - containerPort: 80
       imagePullSecrets:
