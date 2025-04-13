@@ -4,18 +4,14 @@ FROM python:3.9-slim
 # Set the working directory
 WORKDIR /app
 
-# Copy application code and dependencies
+#Copy everything (including agent_app.py)
 COPY . .
 
-# Install dependencies
+#Install dependencies after copying requirements.txt
 RUN pip install -r requirements.txt
-
-# Copy test files
-COPY templates ./templates
-COPY tests ./tests
 
 # Expose the application port
 EXPOSE 5000
 
-# Run the flask application
-CMD ["python", "agent_app.py"]
+#Run app using gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "agent_app:app"]
