@@ -1,68 +1,62 @@
 -- Create the database
-CREATE DATABASE IF NOT EXISTS mooninsurance;
-USE mooninsurance;
+CREATE DATABASE IF NOT EXISTS moon_insurance;
+USE moon_insurance;
 
--- Create the agents table
-CREATE TABLE IF NOT EXISTS agents (
-    agent_code VARCHAR(10) PRIMARY KEY,
-    name VARCHAR(100),
+-- Drop tables if they exist (clean start)
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS sales;
+DROP TABLE IF EXISTS agents;
+
+-- Create agents table
+CREATE TABLE agents (
+    agent_id INT AUTO_INCREMENT PRIMARY KEY,
+    agent_code VARCHAR(50) NOT NULL UNIQUE,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
     branch VARCHAR(100),
+    contact_number VARCHAR(20),
     email VARCHAR(100),
-    phone VARCHAR(20),
-    permitted_products TEXT
+    product_types TEXT,
+    hire_date DATE
 );
 
 -- Insert sample agents
-INSERT INTO agents (agent_code, name, branch, email, phone, permitted_products) VALUES
-('A001', 'Fouzul Hassan', 'Colombo', 'fouzul@mooninsurance.lk', '0711234567', 'Life, Health'),
-('A002', 'Jane Perera', 'Kandy', 'jane.perera@mooninsurance.lk', '0712345678', 'Life'),
-('A003', 'Ravi De Silva', 'Galle', 'ravi.desilva@mooninsurance.lk', '0713456789', 'Health, Travel'),
-('A004', 'Nimal Fernando', 'Jaffna', 'nimal.fernando@mooninsurance.lk', '0714567890', 'Travel'),
-('A005', 'Amaya Gunasekara', 'Kurunegala', 'amaya.gunasekara@mooninsurance.lk', '0715678901', 'Life, Education');
+INSERT INTO agents (agent_code, first_name, last_name, branch, contact_number, email, product_types, hire_date)
+VALUES
+('AGT001', 'Nimal', 'Perera', 'Colombo', '0771234567', 'nimal@example.com', 'Life, Health', '2023-04-01'),
+('AGT002', 'Saman', 'Silva', 'Kandy', '0772345678', 'saman@example.com', 'Life, Vehicle', '2022-06-15'),
+('AGT003', 'Ruwan', 'Fernando', 'Matara', '0773456789', 'ruwan@example.com', 'Health', '2024-01-10');
 
--- Create the sales table
-CREATE TABLE IF NOT EXISTS sales (
+-- Create sales table
+CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
-    agent_code VARCHAR(10),
+    agent_code VARCHAR(50) NOT NULL,
     product_name VARCHAR(100),
     amount DECIMAL(10,2),
     sale_date DATE,
-    FOREIGN KEY (agent_code) REFERENCES agents(agent_code)
+    branch VARCHAR(100),
+    FOREIGN KEY (agent_code) REFERENCES agents(agent_code) ON DELETE CASCADE
 );
 
 -- Insert sample sales
-INSERT INTO sales (agent_code, product_name, amount, sale_date) VALUES
-('A001', 'Life', 10000.00, '2025-04-01'),
-('A002', 'Life', 7500.50, '2025-04-02'),
-('A003', 'Health', 5600.75, '2025-04-03'),
-('A001', 'Health', 4200.00, '2025-04-04'),
-('A004', 'Travel', 9000.00, '2025-04-04');
+INSERT INTO sales (agent_code, product_name, amount, sale_date, branch)
+VALUES
+('AGT001', 'Life Insurance - Premium Plan', 150000.00, '2024-03-10', 'Colombo'),
+('AGT002', 'Vehicle Insurance - Full Coverage', 85000.00, '2024-03-12', 'Kandy'),
+('AGT003', 'Health Insurance - Family', 120000.00, '2024-03-15', 'Matara');
 
--- Create the notifications_sent table
-CREATE TABLE IF NOT EXISTS notifications_sent (
+-- Create notifications table
+CREATE TABLE notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    agent_code VARCHAR(10),
+    agent_code VARCHAR(50),
     message TEXT,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (agent_code) REFERENCES agents(agent_code)
+    FOREIGN KEY (agent_code) REFERENCES agents(agent_code) ON DELETE SET NULL
 );
 
 -- Insert sample notifications
-INSERT INTO notifications_sent (agent_code, message) VALUES
-('A001', 'Congratulations! You reached your April sales target.'),
-('A002', 'Good job! You have achieved your weekly goal.'),
-('A003', 'Reminder: You are close to reaching your monthly target.');
-
--- Create optional aggregated_metrics table
-CREATE TABLE IF NOT EXISTS aggregated_metrics (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    metric_name VARCHAR(100),
-    metric_value VARCHAR(255),
-    calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Insert sample metrics
-INSERT INTO aggregated_metrics (metric_name, metric_value) VALUES
-('Best Performing Branch', 'Colombo'),
-('Top Selling Product', 'Life Insurance'),
-('Top Agent by Sales', 'Fouzul Hassan');
+INSERT INTO notifications (agent_code, message)
+VALUES
+('AGT001', '🎉 Nimal has reached 150k sales milestone!'),
+('AGT002', '🎯 Reminder: Vehicle sales target due this week.'),
+('AGT003', '🚀 Ruwan’s monthly health insurance target achieved!');
