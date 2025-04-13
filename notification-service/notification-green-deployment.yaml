@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agent-service-green
+  name: notification-service-green
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: agent-service
+      app: notification-service
       version: green
   template:
     metadata:
       labels:
-        app: agent-service
+        app: notification-service
         version: green
 
     spec:
       containers:
-      - name: agent-service
-        image: registry.digitalocean.com/moonregistry/agent-service:green
+      - name: notification-service
+        image: registry.digitalocean.com/moonregistry/notification-service:green
         ports:
         - containerPort: 80
       imagePullSecrets:
@@ -27,13 +27,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: agent-service-green
+  name: notification-service-green
 spec:
   selector:
-    app: agent-service
+    app: notification-service
     version: green
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 5000
+    targetPort: 5002
   type: ClusterIP

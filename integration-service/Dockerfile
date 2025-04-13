@@ -11,11 +11,11 @@ COPY . .
 RUN pip install -r requirements.txt
 
 # Copy test files
-COPY templates ./templates
-COPY tests ./tests
+# COPY templates ./templates
+# COPY tests ./tests
 
 # Expose the application port
 EXPOSE 5000
 
 # Run the flask application
-CMD ["python", "agent_app.py"]
+CMD ["python", "integration_app.py"]

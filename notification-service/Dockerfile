@@ -18,4 +18,4 @@ COPY tests ./tests
 EXPOSE 5000
 
 # Run the flask application
-CMD ["python", "agent_app.py"]
+CMD ["python", "notification_app.py"]

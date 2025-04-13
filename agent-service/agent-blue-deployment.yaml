@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-service-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-service
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: agent-service
+        version: blue
+
+    spec:
+      containers:
+      - name: agent-service
+        image: registry.digitalocean.com/moonregistry/agent-service:blue
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: do-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-service-blue
+spec:
+  selector:
+    app: agent-service
+    version: blue
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: ClusterIP
