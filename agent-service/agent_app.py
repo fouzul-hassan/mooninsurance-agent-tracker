@@ -30,7 +30,7 @@ def add_agent():
         cursor = connection.cursor()
 
         query = """
-        INSERT INTO agents (agent_code, first_name, last_name, branch, contact_number, email, product_types, hire_date)
+        INSERT INTO agents (agent_code, first_name, last_name, branch, contact_number, email, team, hire_date)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
@@ -40,7 +40,7 @@ def add_agent():
             data.get('branch'),
             data.get('contact_number'),
             data.get('email'),
-            data.get('product_types'),
+            data.get('team'),
             data.get('hire_date')
         ))
         connection.commit()
@@ -90,7 +90,7 @@ def update_agent(agent_id):
         query = """
         UPDATE agents
         SET agent_code = %s, first_name = %s, last_name = %s, branch = %s,
-            contact_number = %s, email = %s, product_types = %s, hire_date = %s
+            contact_number = %s, email = %s, team = %s, hire_date = %s
         WHERE agent_id = %s
         """
         cursor.execute(query, (
@@ -100,7 +100,7 @@ def update_agent(agent_id):
             data.get('branch'),
             data.get('contact_number'),
             data.get('email'),
-            data.get('product_types'),
+            data.get('team'),
             data.get('hire_date'),
             agent_id
         ))
@@ -140,5 +140,5 @@ def delete_agent(agent_id):
         print(f"Error: {err}")
         return jsonify({"message": "Failed to delete agent."}), 500
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=5000)

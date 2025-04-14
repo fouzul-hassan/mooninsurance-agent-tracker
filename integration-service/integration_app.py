@@ -26,12 +26,12 @@ def add_sale():
         cursor = connection.cursor()
 
         query = """
-        INSERT INTO sales (agent_code, product_name, amount, sale_date, branch)
+        INSERT INTO sales (agent_code, product_id, amount, sale_date, branch)
         VALUES (%s, %s, %s, %s, %s)
         """
         cursor.execute(query, (
             data.get('agent_code'),
-            data.get('product_name'),
+            data.get('product_id'),
             data.get('amount'),
             data.get('sale_date'),
             data.get('branch')
@@ -75,12 +75,12 @@ def update_sale(sale_id):
 
         query = """
         UPDATE sales
-        SET agent_code = %s, product_name = %s, amount = %s, sale_date = %s, branch = %s
+        SET agent_code = %s, product_id = %s, amount = %s, sale_date = %s, branch = %s
         WHERE sale_id = %s
         """
         cursor.execute(query, (
             data.get('agent_code'),
-            data.get('product_name'),
+            data.get('product_id'),
             data.get('amount'),
             data.get('sale_date'),
             data.get('branch'),
