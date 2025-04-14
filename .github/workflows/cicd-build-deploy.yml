@@ -32,7 +32,7 @@ jobs:
           version: 'latest'
 
       - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save k8s-1-31-1-do-5-sgp1-1734795051852
+        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
       - name: Deploy Aggregator CronJob and Blue Ingress
         run: |
@@ -85,7 +85,7 @@ jobs:
           version: 'latest'
 
       - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save k8s-1-31-1-do-5-sgp1-1734795051852
+        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
       - name: Apply Green Deployments
         run: |
@@ -161,7 +161,7 @@ jobs:
           version: 'latest'
 
       - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save k8s-1-31-1-do-5-sgp1-1734795051852
+        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
       - name: Apply Blue Deployments and Ingress
         run: |
