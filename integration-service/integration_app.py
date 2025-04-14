@@ -18,6 +18,7 @@ def index():
 @app.route('/integration/add', methods=['POST'])
 def add_sale():
     data = request.json
+    print("Received Agent Data:", data)
     try:
         connection = mysql.connector.connect(
             host=MYSQL_HOST, user=MYSQL_USER,
@@ -40,7 +41,7 @@ def add_sale():
         return jsonify({"message": "Sale record added successfully."}), 201
 
     except mysql.connector.Error as err:
-        print(f"Error: {err}")
+        print("[ERROR - AGENT ADD]:", err)  # 👈 log MySQL error
         return jsonify({"message": "Failed to add sale record."}), 500
 
 # READ: Get all sales

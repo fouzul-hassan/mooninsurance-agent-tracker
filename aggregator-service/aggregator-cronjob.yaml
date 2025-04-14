@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aggregator-cronjob
+spec:
+  schedule: "30 18 * * *"  # Runs every day at 6:30 PM UTC (12 AM in Sri Lanka)
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: aggregator
+              image: registry.digitalocean.com/meditrackcontainer/aggregator-service:latest
+              imagePullPolicy: Always
+          restartPolicy: Never
+          imagePullSecrets:
+            - name: do-secret
