@@ -20,7 +20,7 @@ jobs:
       # Build and push Aggregator Service
       - name: Build and push Aggregator Service
         run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/aggregate-service:latest ./aggregatorService
+          docker build --no-cache -t registry.digitalocean.com/moonregistry/aggregate-service:latest ./aggregator-service
           docker push registry.digitalocean.com/moonregistry/aggregate-service:latest  
 
       # Set up doctl and kubeconfig
