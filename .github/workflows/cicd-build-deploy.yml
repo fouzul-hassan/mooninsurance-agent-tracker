@@ -1,4 +1,4 @@
-name: Build and Deploy MoonInsurance Services
+name: Build and Deploy MoonInsurance Services.
 
 on:
   push:
