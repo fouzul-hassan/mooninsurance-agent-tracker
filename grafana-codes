@@ -1,0 +1,7 @@
+helm ls -n kube-prometheus-stack
+
+kubectl get pods -n kube-prometheus-stack
+
+kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n kube-prometheus-stack
+
+kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n kube-prometheus-stack
