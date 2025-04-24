@@ -1,174 +1,174 @@
-name: Build and Deploy MoonInsurance Services.
+# name: Build and Deploy MoonInsurance Services.
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  change-to-blue:
-    runs-on: ubuntu-latest
+# jobs:
+#   change-to-blue:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Log in to DigitalOcean
-        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
+#       - name: Log in to DigitalOcean
+#         run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
 
-      - name: Build and push Aggregator Service
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/aggregator-service:latest ./aggregator-service
-          docker push registry.digitalocean.com/moonregistry/aggregator-service:latest  
+#       - name: Build and push Aggregator Service
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/aggregator-service:latest ./aggregator-service
+#           docker push registry.digitalocean.com/moonregistry/aggregator-service:latest  
 
-      - name: Set up doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#       - name: Set up doctl
+#         uses: digitalocean/action-doctl@v2
+#         with:
+#           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+#       - name: Install kubectl
+#         uses: azure/setup-kubectl@v3
+#         with:
+#           version: 'latest'
 
-      - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
+#       - name: Configure kubeconfig
+#         run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
-      - name: Deploy Aggregator CronJob and Blue Ingress
-        run: |
-          kubectl apply -f ingress-blue.yaml
-          kubectl delete cronjob aggregator-cronjob --ignore-not-found
-          kubectl apply -f ./aggregator-service/aggregator-cronjob.yaml
+#       - name: Deploy Aggregator CronJob and Blue Ingress
+#         run: |
+#           kubectl apply -f ingress-blue.yaml
+#           kubectl delete cronjob aggregator-cronjob --ignore-not-found
+#           kubectl apply -f ./aggregator-service/aggregator-cronjob.yaml
 
-  build-green:
-    needs: change-to-blue
-    runs-on: ubuntu-latest
+#   build-green:
+#     needs: change-to-blue
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Log in to DigitalOcean
-        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
+#       - name: Log in to DigitalOcean
+#         run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
 
-      - name: Build and push Agent Service green
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/agent-service:green ./agent-service
-          docker push registry.digitalocean.com/moonregistry/agent-service:green
+#       - name: Build and push Agent Service green
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/agent-service:green ./agent-service
+#           docker push registry.digitalocean.com/moonregistry/agent-service:green
 
-      - name: Build and push Integration Service green
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/integration-service:green ./integration-service
-          docker push registry.digitalocean.com/moonregistry/integration-service:green
+#       - name: Build and push Integration Service green
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/integration-service:green ./integration-service
+#           docker push registry.digitalocean.com/moonregistry/integration-service:green
 
-      - name: Build and push Notification Service green
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/notification-service:green ./notification-service
-          docker push registry.digitalocean.com/moonregistry/notification-service:green
+#       - name: Build and push Notification Service green
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/notification-service:green ./notification-service
+#           docker push registry.digitalocean.com/moonregistry/notification-service:green
 
-  deploy-green:
-    needs: build-green
-    runs-on: ubuntu-latest
+#   deploy-green:
+#     needs: build-green
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Set up doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#       - name: Set up doctl
+#         uses: digitalocean/action-doctl@v2
+#         with:
+#           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+#       - name: Install kubectl
+#         uses: azure/setup-kubectl@v3
+#         with:
+#           version: 'latest'
 
-      - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
+#       - name: Configure kubeconfig
+#         run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
-      - name: Apply Green Deployments
-        run: |
-          kubectl apply -f ./agent-service/agent-green-deployment.yaml
-          kubectl apply -f ./integration-service/integration-green-deployment.yaml
-          kubectl apply -f ./notification-service/notification-green-deployment.yaml
-          kubectl rollout restart deployment agent-service-green
-          kubectl rollout restart deployment integration-service-green
-          kubectl rollout restart deployment notification-service-green
+#       - name: Apply Green Deployments
+#         run: |
+#           kubectl apply -f ./agent-service/agent-green-deployment.yaml
+#           kubectl apply -f ./integration-service/integration-green-deployment.yaml
+#           kubectl apply -f ./notification-service/notification-green-deployment.yaml
+#           kubectl rollout restart deployment agent-service-green
+#           kubectl rollout restart deployment integration-service-green
+#           kubectl rollout restart deployment notification-service-green
 
-  test-green:
-    needs: deploy-green
-    runs-on: ubuntu-latest
+#   test-green:
+#     needs: deploy-green
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Wait for green deployments to stabilize
-        run: sleep 30
+#     steps:
+#       - name: Wait for green deployments to stabilize
+#         run: sleep 30
 
-      - name: Test Agent Service (Green)
-        run: |
-          curl -f http://209.38.124.165.nip.io/agent/get || exit 1
+#       - name: Test Agent Service (Green)
+#         run: |
+#           curl -f http://209.38.124.165.nip.io/agent/get || exit 1
 
-      - name: Test Integration Service (Green)
-        run: |
-          curl -f http://209.38.124.165.nip.io/integration/get || exit 1
+#       - name: Test Integration Service (Green)
+#         run: |
+#           curl -f http://209.38.124.165.nip.io/integration/get || exit 1
 
-      - name: Test Notification Service (Green)
-        run: |
-          curl -f http://209.38.124.165.nip.io/notification/get || exit 1
+#       - name: Test Notification Service (Green)
+#         run: |
+#           curl -f http://209.38.124.165.nip.io/notification/get || exit 1
 
-  build-blue:
-    needs: test-green
-    runs-on: ubuntu-latest
+#   build-blue:
+#     needs: test-green
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Log in to DigitalOcean
-        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
+#       - name: Log in to DigitalOcean
+#         run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login registry.digitalocean.com -u doctl --password-stdin
 
-      - name: Build and push Agent Service blue
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/agent-service:blue ./agent-service
-          docker push registry.digitalocean.com/moonregistry/agent-service:blue
+#       - name: Build and push Agent Service blue
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/agent-service:blue ./agent-service
+#           docker push registry.digitalocean.com/moonregistry/agent-service:blue
 
-      - name: Build and push Integration Service blue
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/integration-service:blue ./integration-service
-          docker push registry.digitalocean.com/moonregistry/integration-service:blue
+#       - name: Build and push Integration Service blue
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/integration-service:blue ./integration-service
+#           docker push registry.digitalocean.com/moonregistry/integration-service:blue
 
-      - name: Build and push Notification Service blue
-        run: |
-          docker build --no-cache -t registry.digitalocean.com/moonregistry/notification-service:blue ./notification-service
-          docker push registry.digitalocean.com/moonregistry/notification-service:blue
+#       - name: Build and push Notification Service blue
+#         run: |
+#           docker build --no-cache -t registry.digitalocean.com/moonregistry/notification-service:blue ./notification-service
+#           docker push registry.digitalocean.com/moonregistry/notification-service:blue
 
-  deploy-blue:
-    needs: build-blue
-    runs-on: ubuntu-latest
+#   deploy-blue:
+#     needs: build-blue
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Set up doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#       - name: Set up doctl
+#         uses: digitalocean/action-doctl@v2
+#         with:
+#           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'latest'
+#       - name: Install kubectl
+#         uses: azure/setup-kubectl@v3
+#         with:
+#           version: 'latest'
 
-      - name: Configure kubeconfig
-        run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
+#       - name: Configure kubeconfig
+#         run: doctl kubernetes cluster kubeconfig save mooninsurance-cluster
 
-      - name: Apply Blue Deployments and Ingress
-        run: |
-          kubectl apply -f ./agent-service/agent-blue-deployment.yaml
-          kubectl apply -f ./integration-service/integration-blue-deployment.yaml
-          kubectl apply -f ./notification-service/notification-blue-deployment.yaml
-          kubectl apply -f ingress-green.yaml
-          kubectl rollout restart deployment agent-service-blue
-          kubectl rollout restart deployment integration-service-blue
-          kubectl rollout restart deployment notification-service-blue
+#       - name: Apply Blue Deployments and Ingress
+#         run: |
+#           kubectl apply -f ./agent-service/agent-blue-deployment.yaml
+#           kubectl apply -f ./integration-service/integration-blue-deployment.yaml
+#           kubectl apply -f ./notification-service/notification-blue-deployment.yaml
+#           kubectl apply -f ingress-green.yaml
+#           kubectl rollout restart deployment agent-service-blue
+#           kubectl rollout restart deployment integration-service-blue
+#           kubectl rollout restart deployment notification-service-blue
