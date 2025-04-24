@@ -1,23 +1,37 @@
 import pandas as pd
 import mysql.connector
 import psycopg2
+from dotenv import load_dotenv
+import os
 
 # --- MySQL Config for fetching data ---
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PWD = os.getenv("MYSQL_PWD")
+MYSQL_DB = os.getenv("MYSQL_DB")
+PORT = os.getenv("PORT")
+
 MYSQL_CONFIG = {
-    "host": "mooninsurance.ctuswk86cwot.eu-north-1.rds.amazonaws.com",
-    "user": "admin",
-    "password": "root0811",
-    "database": "mooninsurance",
-    "port": 3306
+    "host": MYSQL_HOST,
+    "user": MYSQL_USER,
+    "password": MYSQL_PWD,
+    "database": MYSQL_DB,
+    "port": PORT
 }
 
 # --- Redshift Config ---
+REDSHIFT_HOST=os.getenv("REDSHIFT_HOST")
+REDSHIFT_PORT=os.getenv("REDSHIFT_PORT")
+REDSHIFT_DBNAME=os.getenv("REDSHIFT_DBNAME")
+REDSHIFT_USERNAME=os.getenv("REDSHIFT_USERNAME")
+REDSHIFT_PWD=os.getenv("REDSHIFT_PWD")
+
 REDSHIFT_CONFIG = {
-    "host": "mooninsurance-wg.812836555303.eu-north-1.redshift-serverless.amazonaws.com",
-    "port": "5439",
-    "dbname": "dev",
-    "user": "admin-moon",
-    "password": "Moon-insu0811"
+    "host": REDSHIFT_HOST,
+    "port": REDSHIFT_PORT,
+    "dbname": REDSHIFT_DBNAME,
+    "user": REDSHIFT_USERNAME,
+    "password": REDSHIFT_PWD
 }
 
 # ------------------ FETCHING AGGREGATIONS ------------------

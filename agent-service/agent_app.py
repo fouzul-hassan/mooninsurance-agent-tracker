@@ -1,14 +1,22 @@
 from flask import Flask, request, jsonify, render_template
 import mysql.connector
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
+
+
+load_dotenv()  # Loads variables from .env into the environment
+
+
 # Database connection configuration
-MYSQL_HOST = "mooninsurance.ctuswk86cwot.eu-north-1.rds.amazonaws.com"
-MYSQL_USER = "admin"
-MYSQL_PWD = "root0811"
-MYSQL_DB = "mooninsurance"
-PORT = "3306"
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PWD = os.getenv("MYSQL_PWD")
+MYSQL_DB = os.getenv("MYSQL_DB")
+PORT = os.getenv("PORT")
+
 
 # Route for the front-end page
 @app.route('/agent')
